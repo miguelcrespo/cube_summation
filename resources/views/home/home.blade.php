@@ -1,8 +1,26 @@
 @extends('layouts.master')
 
 @section('content')
-    Pantalla principal
+    <ul>
+        <li v-for="comando in comandos">
+            <span>@{{ comando.text }}</span><br>
+            <span> > @{{ comando.response }}</span><br>
+            <small>@{{comando.date}}</small>
+        </li>
+    </ul>
 
+    <form action="#" novalidate>
+        <div id="row">
+            <div class="col-md-10">
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Comando</label>
+                    <input type="text" v-model="newCommand" class="form-control" id="exampleInputEmail1" placeholder="Insertar comando...">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-success" :disabled="newCommand === ''"  v-on:click="enviarComando">Enviar</button>
+            </div>
+    </form>
 
     <div class="modal fade" tabindex="-1" role="dialog" id="myModal" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
