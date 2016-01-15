@@ -7,6 +7,17 @@ if (window.showModal) {
     $('#myModal').modal('show');
 }
 
+var updateActions = function(){
+    vm.actions += 1;
+    if(vm.actions >= vm.cube.m){
+        vm.tests += 1;
+    }
+
+    if(vm.tests >= vm.cube.t){
+        vm.tests = 0;
+    }
+};
+
 var vm = new Vue({
     el: '#main',
     data: {
@@ -69,6 +80,7 @@ var vm = new Vue({
                     }, function () {
                         vm.comandos.push({text: vm.newCommand, date: new Date(), response: "OK"});
                         vm.newCommand = "";
+                        updateActions();
                     });
                     break;
                 case "QUERY":
@@ -87,6 +99,7 @@ var vm = new Vue({
                     }, function (response) {
                         vm.comandos.push({text: vm.newCommand, date: new Date(), response: response.result});
                         vm.newCommand = "";
+                        updateActions();
                     });
                     break;
 
@@ -95,14 +108,7 @@ var vm = new Vue({
 
                     break;
             }
-            vm.actions += 1;
-            if(vm.actions >= vm.cube.m){
-                vm.tests += 1;
-            }
 
-            if(vm.tests >= vm.cube.t){
-                vm.tests = 0;
-            }
 
         },
         resetCube: function (e) {
