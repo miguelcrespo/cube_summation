@@ -2,7 +2,10 @@
  * Created by Miguel on 1/14/16.
  */
 
-$('#myModal').modal('show');
+
+if (window.showModal) {
+    $('#myModal').modal('show');
+}
 
 var vm = new Vue({
     el: '#main',

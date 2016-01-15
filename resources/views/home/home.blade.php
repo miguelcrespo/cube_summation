@@ -9,16 +9,18 @@
         </li>
     </ul>
 
+
     <form action="#" novalidate>
         <div id="row">
             <div class="col-md-10">
                 <div class="form-group">
                     <label for="exampleInputEmail1">Comando</label>
-                    <input type="text" v-model="newCommand" class="form-control" id="exampleInputEmail1" placeholder="Insertar comando...">
+                    <input type="text" v-model="newCommand" class="form-control" id="exampleInputEmail1"
+                           placeholder="Insertar comando...">
                 </div>
             </div>
             <div class="col-md-2">
-                <button class="btn btn-success" :disabled="newCommand === ''"  v-on:click="enviarComando">Enviar</button>
+                <button class="btn btn-success" :disabled="newCommand === ''" v-on:click="enviarComando">Enviar</button>
             </div>
     </form>
 
@@ -33,15 +35,18 @@
 
                         <div class="form-group">
                             <label for="exampleInputEmail1">Tests</label>
-                            <input type="number" v-model="cube.tests" class="form-control" id="exampleInputEmail1" placeholder="">
+                            <input type="number" v-model="cube.tests" class="form-control" id="exampleInputEmail1"
+                                   placeholder="">
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">N Matrix</label>
-                            <input type="number" v-model="cube.matrix" class="form-control" id="exampleInputEmail1" placeholder="">
+                            <input type="number" v-model="cube.matrix" class="form-control" id="exampleInputEmail1"
+                                   placeholder="">
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">N Comandos</label>
-                            <input type="number" v-model="cube.m" class="form-control" id="exampleInputEmail1" placeholder="">
+                            <input type="number" v-model="cube.m" class="form-control" id="exampleInputEmail1"
+                                   placeholder="">
                         </div>
 
 
@@ -53,5 +58,21 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+
+
+
+    <script>
+        @if (!Session::has('matrix'))
+        window.showModal = true;
+        /*$(document).ready(function () {
+            $('#myModal').modal('show');
+
+        });*/
+
+        @endif
+    </script>
+
 @endsection
+
+
 
