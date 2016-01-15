@@ -26,14 +26,13 @@ class CuboController extends Controller
         $this->iniciarSession();
 
         $this->validate($request, [
-            't' => 'required|min:1|max:50',
             'm' => 'required|min:1|max:1000',
             'n' => 'required|min:1|max:100',
         ]);
 
-        $input = $request->only('t', 'm', 'n');
+        $input = $request->only('m', 'n');
 
-        $matrix = new Matrix($input['t'], $input['n'], $input['m']);
+        $matrix = new Matrix($input['n'], $input['m']);
 
         $this->iniciarConfiguracionSession($matrix, 0, 0);
 
@@ -160,11 +159,10 @@ class CuboController extends Controller
 
 class Matrix
 {
-    private $t, $m, $n, $matrix;
+    private $m, $n, $matrix;
 
-    function __construct($t, $n, $m)
+    function __construct($n, $m)
     {
-        $this->t = $t;
         $this->m = $m;
         $this->n = $n;
         $this->construirMatrix($n);
@@ -172,9 +170,9 @@ class Matrix
 
     private function construirMatrix($n)
     {
-        for ($i = 0; $i < $n; $i++) {
-            for ($j = 0; $j < $n; $j++) {
-                for ($k = 0; $k < $n; $k++) {
+        for ($i = 0; $i <= $n; $i++) {
+            for ($j = 0; $j <= $n; $j++) {
+                for ($k = 0; $k <= $n; $k++) {
                     $this->matrix[$i][$j][$k] = 0;
                 }
             }
@@ -189,9 +187,9 @@ class Matrix
     public function query($x1, $y1, $z1, $x2, $y2, $z2)
     {
         $sum = 0;
-        for ($i = $x1; $i < $x2; $i++) {
-            for ($j = $y1; $j < $y2; $j++) {
-                for ($k = $z1; $k < $z2; $k++) {
+        for ($i = $x1; $i <= $x2; $i++) {
+            for ($j = $y1; $j <= $y2; $j++) {
+                for ($k = $z1; $k <= $z2; $k++) {
                     $sum += $this->matrix[$i][$j][$k];
                 }
             }
@@ -212,11 +210,6 @@ class Matrix
     public function getN()
     {
         return $this->n;
-    }
-
-    public function getT()
-    {
-        return $this->t;
     }
 
 
