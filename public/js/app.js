@@ -16,7 +16,9 @@ var vm = new Vue({
             m: ''
         },
         comandos: [],
-        newCommand: ''
+        newCommand: '',
+        actions: 0,
+        tests: 0
     },
     // define methods under the `methods` object
     methods: {
@@ -27,11 +29,18 @@ var vm = new Vue({
         config: function (e) {
             e.preventDefault();
 
-            if (!vm.cube.t || !vm.cube.n || !vm.cube.m) {
+
+            if ((!vm.cube.t && !vm.steps) || !vm.cube.n || !vm.cube.m) {
                 return alert("Por favor completa el formulario!");
             }
 
-            $.post("/", {t: vm.cube.t, n: vm.cube.n, m: vm.cube.m}, function () {
+
+
+            vm.comandos = [];
+            vm.newCommand = "";
+            vm.actions = 0;
+
+            $.post("/", {n: vm.cube.n, m: vm.cube.m}, function () {
                 $('#myModal').modal('hide');
             });
 
@@ -80,11 +89,24 @@ var vm = new Vue({
                         vm.newCommand = "";
                     });
                     break;
+
                 default:
                     return alert("El comando " + vm.newCommand + " no es valido");
 
                     break;
             }
+            vm.actions += 1;
+            if(vm.actions >= vm.cube.m){
+                vm.tests += 1;
+            }
+
+            if(vm.tests >= vm.cube.t){
+                vm.tests = 0;
+            }
+
+        },
+        resetCube: function (e) {
+            $('#myModal').modal('show');
 
         }
     }

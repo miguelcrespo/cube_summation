@@ -15,12 +15,13 @@
             <div class="col-md-10">
                 <div class="form-group">
                     <label for="exampleInputEmail1">Comando</label>
-                    <input type="text" v-model="newCommand" class="form-control" id="exampleInputEmail1"
+                    <input :disabled="actions >= cube.m" type="text" v-model="newCommand" class="form-control" id="exampleInputEmail1"
                            placeholder="Insertar comando...">
                 </div>
             </div>
             <div class="col-md-2">
-                <button class="btn btn-success" :disabled="newCommand === ''" v-on:click="enviarComando">Enviar</button>
+                <button class="btn btn-success" :disabled="newCommand === ''" v-if="actions < cube.m" v-on:click="enviarComando">Enviar</button>
+                <button class="btn btn-success" v-if="actions >= cube.m" v-on:click="resetCube">Reset</button>
             </div>
     </form>
 
@@ -34,9 +35,9 @@
                     <div class="modal-body">
 
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Tests</label>
+                            <label for="exampleInputEmail1">Tests <span v-if="tests>0">@{{ tests + 1 }} de @{{ cube.t }}</span> </label>
                             <input type="number" v-model="cube.t" class="form-control" id="exampleInputEmail1"
-                                   placeholder="">
+                                   placeholder="" :disabled="tests!==0 && tests < cube.t">
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">N Matrix</label>
@@ -63,11 +64,7 @@
 
     <script>
         @if (!$matrix)
-        window.showModal = true;
-        /*$(document).ready(function () {
-            $('#myModal').modal('show');
-
-        });*/
+                window.showModal = true;
         @endif
     </script>
 

@@ -16,6 +16,9 @@ class CuboController extends Controller
     {
         $this->iniciarSession();
 
+        session_destroy();
+
+
         $matrix = $this->getMatrix();
 
         return view('home.home', ['matrix' => $matrix]);
