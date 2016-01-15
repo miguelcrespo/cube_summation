@@ -12,6 +12,8 @@
 */
 
 Route::get('/', 'CuboController@index');
+Route::post('/', 'CuboController@create');
+
 
 
 /*

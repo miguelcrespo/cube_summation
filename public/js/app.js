@@ -38,12 +38,14 @@ var vm = new Vue({
         config: function (e) {
             e.preventDefault();
 
-            if (!vm.cube.tests || !vm.cube.matrix || !vm.cube.m) {
+            if (!vm.cube.t || !vm.cube.n || !vm.cube.m) {
                 return alert("Por favor completa el formulario!");
             }
 
+            $.post( "/", {t: vm.cube.t, n: vm.cube.n, m: vm.cube.m}, function() {
+                $('#myModal').modal('hide');
+            });
 
-            $('#myModal').modal('hide');
 
 
         },

@@ -35,12 +35,12 @@
 
                         <div class="form-group">
                             <label for="exampleInputEmail1">Tests</label>
-                            <input type="number" v-model="cube.tests" class="form-control" id="exampleInputEmail1"
+                            <input type="number" v-model="cube.t" class="form-control" id="exampleInputEmail1"
                                    placeholder="">
                         </div>
                         <div class="form-group">
                             <label for="exampleInputEmail1">N Matrix</label>
-                            <input type="number" v-model="cube.matrix" class="form-control" id="exampleInputEmail1"
+                            <input type="number" v-model="cube.n" class="form-control" id="exampleInputEmail1"
                                    placeholder="">
                         </div>
                         <div class="form-group">
@@ -62,13 +62,12 @@
 
 
     <script>
-        @if (!Session::has('matrix'))
+        @if (!$matrix)
         window.showModal = true;
         /*$(document).ready(function () {
             $('#myModal').modal('show');
 
         });*/
-
         @endif
     </script>
 
