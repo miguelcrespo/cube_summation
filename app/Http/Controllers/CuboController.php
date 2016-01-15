@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Datos;
 use App\Matrix;
 use Illuminate\Http\Request;
 
@@ -15,19 +16,18 @@ class CuboController extends Controller
 
     public function index()
     {
-        $this->iniciarSession();
+        $datos = new Datos();
 
-        session_destroy();
+        $datos->deleteSession();
 
-
-        $matrix = $this->getMatrix();
+        $matrix = $datos->getMatrix();
 
         return view('home.home', ['matrix' => $matrix]);
     }
 
     public function create(Request $request)
     {
-        $this->iniciarSession();
+        $datos = new Datos();
 
         $this->validate($request, [
             'm' => 'required|integer|between:1,1000',
@@ -38,8 +38,9 @@ class CuboController extends Controller
 
         $matrix = new Matrix($input['n'], $input['m']);
 
-        $this->iniciarConfiguracionSession($matrix, 0, 0);
 
+        $datos->setMatrix($matrix);
+        $datos->setActions(0);
 
         return response()->json(['error' => 'false']);
 
@@ -48,7 +49,7 @@ class CuboController extends Controller
 
     public function update(Request $request)
     {
-        $this->iniciarSession();
+        $datos = new Datos();
 
         $this->validate($request, [
             'x' => 'required|integer|min:1',
@@ -57,7 +58,7 @@ class CuboController extends Controller
             'value' => 'required|integer|between:-1000000000,1000000000',
         ]);
 
-        $matrix = $this->getMatrix();
+        $matrix = $datos->getMatrix();
 
         if (!$matrix) {
             return response()->json(['error' => 'La matrix no ha sido configurada'], 500);
@@ -80,7 +81,7 @@ class CuboController extends Controller
     }
 
     public function query(Request $request){
-        $this->iniciarSession();
+        $datos = new Datos();
 
 
         $this->validate($request, [
@@ -93,7 +94,7 @@ class CuboController extends Controller
         ]);
 
 
-        $matrix = $this->getMatrix();
+        $matrix = $datos->getMatrix();
 
         if(!$matrix){
             return response()->json(['error' => 'La matrix no ha sido configurada'], 500);
@@ -121,41 +122,19 @@ class CuboController extends Controller
         $_SESSION['actions'] = $actions;
     }
 
-    private function iniciarSession()
-    {
-        if (!isset($_SESSION)) {
-            session_start();
-        }
-
-    }
-
-    private function getMatrix()
-    {
-        $matrix = null;
-        if (isset($_SESSION['matrix'])) {
-            $matrix = $_SESSION['matrix'];
-
-        }
-
-        return $matrix;
-    }
-
     private function checkTests($matrix)
     {
+        $datos = new Datos();
 
-        if ($_SESSION['actions'] >= $matrix->getM()) {
-            $_SESSION['matrix'] = null;
+        if ($datos->getActions() >= $matrix->getM()) {
+            $datos->setMatrix(null);
             return false;
         } else {
-            $_SESSION['actions'] += 1;
+           $datos->setActions($datos->getActions() + 1);
         }
 
         return true;
     }
 
-    private function deleteSession()
-    {
-        session_destroy();
-    }
 
 }
