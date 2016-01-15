@@ -76,6 +76,41 @@ class CuboController extends Controller
 
     }
 
+    public function query(Request $request){
+        $this->iniciarSession();
+
+
+        $this->validate($request, [
+            'x1' => 'required|min:1',
+            'x2' => 'required|min:1',
+            'y1' => 'required|min:1',
+            'y2' => 'required|min:1',
+            'z1' => 'required|min:1',
+            'z2' => 'required|min:1',
+        ]);
+
+
+        $matrix = $this->getMatrix();
+
+        if(!$matrix){
+            return response()->json(['error' => 'La matrix no ha sido configurada'], 500);
+        }
+
+        $values = $request->only('x1', 'x2', 'y1', 'y2', 'z1', 'z2');
+
+        if($values['x2']-1 < $values['x1']-1 || $values['y2']-1 < $values['y1']-1 || $values['z2']-1 < $values['z1']-1){
+            return response()->json(['error' => 'Un rango minimo es menor al maximo'], 500);
+        }
+
+
+        if(!$this->checkTests($matrix)){
+            return response()->json(['error' => 'Tests finalizados'], 500);
+        };
+
+
+        return response()->json(['result' => $matrix->query($values['x1']-1, $values['y1']-1, $values['z1']-1, $values['x2']-1, $values['y2']-1, $values['z2']-1)]);
+    }
+
 
     private function iniciarConfiguracionSession($matrix, $tests, $actions)
     {

@@ -62,6 +62,24 @@ var vm = new Vue({
                         vm.newCommand = "";
                     });
                     break;
+                case "QUERY":
+
+                    if (comandos.length !== 7) {
+                        return alert("Comando QUERY mal formado");
+                    }
+
+                    $.post("/query", {
+                        x1: comandos[1],
+                        y1: comandos[2],
+                        z1: comandos[3],
+                        x2: comandos[4],
+                        y2: comandos[5],
+                        z2: comandos[6]
+                    }, function (response) {
+                        vm.comandos.push({text: vm.newCommand, date: new Date(), response: response.result});
+                        vm.newCommand = "";
+                    });
+                    break;
                 default:
                     return alert("El comando " + vm.newCommand + " no es valido");
 
