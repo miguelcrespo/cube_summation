@@ -12,25 +12,6 @@ use Symfony\Component\HttpFoundation\Response;
 class CuboController extends Controller
 {
 
-    private function iniciarSession()
-    {
-        if (!isset($_SESSION)) {
-            session_start();
-        }
-
-    }
-
-    private function getMatrix()
-    {
-        $matrix = null;
-        if (isset($_SESSION['matrix'])) {
-            $matrix = $_SESSION['matrix'];
-
-        }
-
-        return $matrix;
-    }
-
     public function index()
     {
         $this->iniciarSession();
@@ -61,11 +42,83 @@ class CuboController extends Controller
 
     }
 
-    private function iniciarConfiguracionSession($matrix, $int, $int1)
+
+    public function update(Request $request){
+        $this->iniciarSession();
+
+        $this->validate($request, [
+            'x' => 'required|min:1',
+            'y' => 'required|min:1',
+            'z' => 'required|min:1',
+            'value' => 'required',
+        ]);
+
+        $matrix = $this->getMatrix();
+
+        if(!$matrix){
+            $this->deleteSession();
+            return response()->json(['error' => 'La matrix no ha sido configurada'], 500);
+        }
+
+        if(!$this->checkTests($matrix)){
+            $this->deleteSession();
+            return response()->json(['error' => 'Tests finalizados'], 500);
+        };
+
+        $input = $request->only('x', 'y', 'z', 'value');
+
+        if($input['x'] > $matrix->getN() || $input['y'] > $matrix->getN() || $input['z'] > $matrix->getN()){
+            return response()->json(['error' => 'Valores exceden tamanio de la matrix...'], 500);
+        }
+
+        $matrix->updateValue($input['x']-1, $input['y']-1, $input['z']-1, $input['value']);
+
+        return response()->json(['error' => false]);
+
+    }
+
+
+    private function iniciarConfiguracionSession($matrix, $tests, $actions)
     {
         $_SESSION['matrix'] = $matrix;
-        $_SESSION['tests'] = 0;
-        $_SESSION['actions'] = 0;
+        $_SESSION['actions'] = $actions;
+    }
+
+    private function iniciarSession()
+    {
+        if (!isset($_SESSION)) {
+            session_start();
+        }
+
+    }
+
+    private function getMatrix()
+    {
+        $matrix = null;
+        if (isset($_SESSION['matrix'])) {
+            $matrix = $_SESSION['matrix'];
+
+        }
+
+        return $matrix;
+    }
+
+    private function checkTests($matrix)
+    {
+
+        if( $_SESSION['actions'] >= $matrix->getM()){
+            $_SESSION['matrix'] = null;
+            return false;
+        }else{
+            $_SESSION['actions'] += 1;
+        }
+
+        return true;
+    }
+
+    private function deleteSession()
+    {
+        session_destroy();
     }
 
 }

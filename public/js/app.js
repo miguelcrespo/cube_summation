@@ -15,18 +15,7 @@ var vm = new Vue({
             n: '',
             m: ''
         },
-        comandos: [
-            {
-                text: "UPDATE 1 1 1 2",
-                date: new Date(),
-                response: "Ok"
-            },
-            {
-                text: "QUERY  1 1 1 2 2 2 ",
-                date: new Date(),
-                response: "23"
-            }
-        ],
+        comandos: [],
         newCommand: ''
     },
     // define methods under the `methods` object
@@ -42,10 +31,9 @@ var vm = new Vue({
                 return alert("Por favor completa el formulario!");
             }
 
-            $.post( "/", {t: vm.cube.t, n: vm.cube.n, m: vm.cube.m}, function() {
+            $.post("/", {t: vm.cube.t, n: vm.cube.n, m: vm.cube.m}, function () {
                 $('#myModal').modal('hide');
             });
-
 
 
         },
@@ -55,8 +43,31 @@ var vm = new Vue({
          */
         enviarComando: function (e) {
             // Este metodo enviara la informacion al servidor cuando este se haya implementado...
-            vm.comandos.push({text: vm.newCommand, date: new Date(), response: "Fake response"});
-            vm.newCommand = "";
+
+            var comandos = vm.newCommand.split(" ");
+
+            switch (comandos[0].toUpperCase()) {
+                case "UPDATE":
+                    if (comandos.length !== 5) {
+                        return alert("Comando UPDATE mal formado");
+                    }
+
+                    $.post("/update", {
+                        x: comandos[1],
+                        y: comandos[2],
+                        z: comandos[3],
+                        value: comandos[4]
+                    }, function () {
+                        vm.comandos.push({text: vm.newCommand, date: new Date(), response: comandos[4]});
+                        vm.newCommand = "";
+                    });
+                    break;
+                default:
+                    return alert("El comando " + vm.newCommand + " no es valido");
+
+                    break;
+            }
+
         }
     }
 });
