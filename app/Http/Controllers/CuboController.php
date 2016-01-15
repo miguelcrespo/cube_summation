@@ -29,8 +29,8 @@ class CuboController extends Controller
         $this->iniciarSession();
 
         $this->validate($request, [
-            'm' => 'required|min:1|max:1000',
-            'n' => 'required|min:1|max:100',
+            'm' => 'required|integer|between:1,1000',
+            'n' => 'required|integer|between:1,100',
         ]);
 
         $input = $request->only('m', 'n');
@@ -50,10 +50,10 @@ class CuboController extends Controller
         $this->iniciarSession();
 
         $this->validate($request, [
-            'x' => 'required|min:1',
-            'y' => 'required|min:1',
-            'z' => 'required|min:1',
-            'value' => 'required',
+            'x' => 'required|integer|min:1',
+            'y' => 'required|integer|min:1',
+            'z' => 'required|integer|min:1',
+            'value' => 'required|integer|between:-1000000000,1000000000',
         ]);
 
         $matrix = $this->getMatrix();
@@ -65,7 +65,7 @@ class CuboController extends Controller
         $input = $request->only('x', 'y', 'z', 'value');
 
         if ($input['x'] > $matrix->getN() || $input['y'] > $matrix->getN() || $input['z'] > $matrix->getN()) {
-            return response()->json(['error' => 'Valores exceden tamanio de la matrix...'], 500);
+            return response()->json(['error' => 'Valores exceden tamanio de la matrix...'], 422);
         }
 
         if (!$this->checkTests($matrix)) {
@@ -101,7 +101,7 @@ class CuboController extends Controller
         $values = $request->only('x1', 'x2', 'y1', 'y2', 'z1', 'z2');
 
         if($values['x2']-1 < $values['x1']-1 || $values['y2']-1 < $values['y1']-1 || $values['z2']-1 < $values['z1']-1){
-            return response()->json(['error' => 'Un rango minimo es menor al maximo'], 500);
+            return response()->json(['error' => 'Un rango minimo es menor al maximo'], 422);
         }
 
 
