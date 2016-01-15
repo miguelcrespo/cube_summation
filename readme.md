@@ -1,27 +1,44 @@
-## Laravel PHP Framework
+Cube Summation Challenge
+------------------------
 
-[![Build Status](https://travis-ci.org/laravel/framework.svg)](https://travis-ci.org/laravel/framework)
-[![Total Downloads](https://poser.pugx.org/laravel/framework/d/total.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Stable Version](https://poser.pugx.org/laravel/framework/v/stable.svg)](https://packagist.org/packages/laravel/framework)
-[![Latest Unstable Version](https://poser.pugx.org/laravel/framework/v/unstable.svg)](https://packagist.org/packages/laravel/framework)
-[![License](https://poser.pugx.org/laravel/framework/license.svg)](https://packagist.org/packages/laravel/framework)
+Repositorio que contiene la implementación en Laravel del reto planteado en https://www.hackerrank.com/challenges/cube-summation.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as authentication, routing, sessions, queueing, and caching.
 
-Laravel is accessible, yet powerful, providing powerful tools needed for large, robust applications. A superb inversion of control container, expressive migration system, and tightly integrated unit testing support give you the tools you need to build any application with which you are tasked.
+![App](http://s16.postimg.org/c2znqlmat/Screen_Shot_2016_01_15_at_5_06_24_PM.png)
 
-## Official Documentation
 
-Documentation for the framework can be found on the [Laravel website](http://laravel.com/docs).
+Capas de la aplicacion
+=======
 
-## Contributing
+![Capas de la aplicacion](http://s11.postimg.org/awackujar/Screen_Shot_2016_01_15_at_5_01_25_PM.png)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
+**Capa del cliente:**
+La capa del cliente ejecutada en el navegador se encarga de crear una interfaz interactiva para el usuario, ademas de realizar también las validaciones requeridas en el navegador para dar retroalimentación al usuario más rápidamente y ahorrar carga al servidor (Sin embargo también se realizan las validaciones en el servidor).
 
-## Security Vulnerabilities
+**Esta capa consiste de:**
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+ - Vue..JS para el data-binding.
+ - Bootstrap y Jquery para los modals.
+ - app.js encargado de configurar el vue.js y procesar las acciones del usuario en el cliente.
 
-### License
+**Presentacion servidor:**
+Se usa Laravel Blade para pre-renderizar la plantilla y usar una plantilla maestra para evitar la repetición de código HTML.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+ **Logica servidor:**
+ Esta capa se encarga de procesar la información que llega mediante peticiones del usuario y dar respuesta a este, consiste en las siguientes clases:
+
+ - **Matrix.php: ** Es la encargada de llevar a cabo toda la lógica respecto a la multiplicación y actualización de datos en la matriz de 3D.
+ - **CuboController.php:** Es el controlador que se encarga de procesar las peticiones del usuario, conectándose a **Matrix.php** para calcular las respuestas que serán dadas al usuario.
+
+**Capa persistencia:**
+Esta capa se encarga de guardar los datos de las respectivas sesiones de cada usuario para asi permitir el juego a diferentes personas con diferentes matrices, se implementaron sesiones para poder realizar un juego paso por paso donde el usuario vea las respuestas a sus comandos inmediatamente en vez de enviar todas los comandos de una vez.
+
+**Esta capa consiste en:**
+
+ - Datos.php que se encarga de manejar todo lo respectivo a las sesiones, al separar esta capa del resto de la aplicacion se permite que en un futuro sea más fácil cambiar la capa de persistencia sin afectar el resto de la aplicacion.
+
+
+Tests
+-------
+
+    phpunit
