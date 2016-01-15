@@ -58,7 +58,7 @@ var vm = new Vue({
                         z: comandos[3],
                         value: comandos[4]
                     }, function () {
-                        vm.comandos.push({text: vm.newCommand, date: new Date(), response: comandos[4]});
+                        vm.comandos.push({text: vm.newCommand, date: new Date(), response: "OK"});
                         vm.newCommand = "";
                     });
                     break;

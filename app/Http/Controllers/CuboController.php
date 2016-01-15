@@ -43,7 +43,8 @@ class CuboController extends Controller
     }
 
 
-    public function update(Request $request){
+    public function update(Request $request)
+    {
         $this->iniciarSession();
 
         $this->validate($request, [
@@ -55,23 +56,21 @@ class CuboController extends Controller
 
         $matrix = $this->getMatrix();
 
-        if(!$matrix){
-            $this->deleteSession();
+        if (!$matrix) {
             return response()->json(['error' => 'La matrix no ha sido configurada'], 500);
         }
 
-        if(!$this->checkTests($matrix)){
-            $this->deleteSession();
-            return response()->json(['error' => 'Tests finalizados'], 500);
-        };
-
         $input = $request->only('x', 'y', 'z', 'value');
 
-        if($input['x'] > $matrix->getN() || $input['y'] > $matrix->getN() || $input['z'] > $matrix->getN()){
+        if ($input['x'] > $matrix->getN() || $input['y'] > $matrix->getN() || $input['z'] > $matrix->getN()) {
             return response()->json(['error' => 'Valores exceden tamanio de la matrix...'], 500);
         }
 
-        $matrix->updateValue($input['x']-1, $input['y']-1, $input['z']-1, $input['value']);
+        if (!$this->checkTests($matrix)) {
+            return response()->json(['error' => 'Tests finalizados'], 500);
+        };
+
+        $matrix->updateValue($input['x'] - 1, $input['y'] - 1, $input['z'] - 1, $input['value']);
 
         return response()->json(['error' => false]);
 
@@ -106,10 +105,10 @@ class CuboController extends Controller
     private function checkTests($matrix)
     {
 
-        if( $_SESSION['actions'] >= $matrix->getM()){
+        if ($_SESSION['actions'] >= $matrix->getM()) {
             $_SESSION['matrix'] = null;
             return false;
-        }else{
+        } else {
             $_SESSION['actions'] += 1;
         }
 
