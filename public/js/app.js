@@ -7,15 +7,25 @@ if (window.showModal) {
     $('#myModal').modal('show');
 }
 
-var updateActions = function(){
+var updateActions = function () {
     vm.actions += 1;
-    if(vm.actions >= vm.cube.m){
+    if (vm.actions >= vm.cube.m) {
         vm.tests += 1;
     }
 
-    if(vm.tests >= vm.cube.t){
+    if (vm.tests >= vm.cube.t) {
         vm.tests = 0;
     }
+};
+
+var processErrorMessages = function (response) {
+    if (response.responseJSON.error) {
+        alert(response.responseJSON.error);
+    } else {
+        var keys = Object.keys(response.responseJSON);
+        alert("Hay errores en los campos: " + keys);
+    }
+
 };
 
 var vm = new Vue({
@@ -46,13 +56,15 @@ var vm = new Vue({
             }
 
 
-
             vm.comandos = [];
             vm.newCommand = "";
             vm.actions = 0;
 
-            $.post("/", {n: vm.cube.n, m: vm.cube.m}, function () {
+            $.post("/", {n: vm.cube.n, m: vm.cube.m}).done(function (response) {
                 $('#myModal').modal('hide');
+            }).fail(function (data) {
+
+                processErrorMessages(data);
             });
 
 
@@ -62,6 +74,7 @@ var vm = new Vue({
          * @param e Evento que lo invoco
          */
         enviarComando: function (e) {
+            e.preventDefault();
             // Este metodo enviara la informacion al servidor cuando este se haya implementado...
 
             var comandos = vm.newCommand.split(" ");
@@ -77,10 +90,12 @@ var vm = new Vue({
                         y: comandos[2],
                         z: comandos[3],
                         value: comandos[4]
-                    }, function () {
+                    }).done(function (response) {
                         vm.comandos.push({text: vm.newCommand, date: new Date(), response: "OK"});
                         vm.newCommand = "";
                         updateActions();
+                    }).fail(function (data) {
+                        processErrorMessages(data);
                     });
                     break;
                 case "QUERY":
@@ -96,10 +111,12 @@ var vm = new Vue({
                         x2: comandos[4],
                         y2: comandos[5],
                         z2: comandos[6]
-                    }, function (response) {
+                    }).done(function (response) {
                         vm.comandos.push({text: vm.newCommand, date: new Date(), response: response.result});
                         vm.newCommand = "";
                         updateActions();
+                    }).fail(function (data) {
+                        processErrorMessages(data);
                     });
                     break;
 
@@ -112,6 +129,7 @@ var vm = new Vue({
 
         },
         resetCube: function (e) {
+            e.preventDefault();
             $('#myModal').modal('show');
 
         }
